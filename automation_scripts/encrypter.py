@@ -5,7 +5,7 @@
 Class to simplify the uses of encryption in strings.
 """
 
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 import base64 # To decode 
 
 class Encrypter(object):

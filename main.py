@@ -15,6 +15,12 @@ WEB used: https://www.frbb.utn.edu.ar/
 """
 WEB STRUCTURE
 
+To login.
+     - #inst12780
+      - .content
+       - .form-group
+        - input
+
 After login.
 
 To select career:
@@ -56,6 +62,7 @@ Inside each cathedra
 
 from automation_scripts.web_scrapping import WebScrapper
 import os.path
+import time
 
 # Imports
 
@@ -67,8 +74,11 @@ class Faculty(object):
     """
     Script to control faculty WEB.
     """
-    def __init__(self, chromedriver):
+    def __init__(self, chromedriver, INIT_URL):
         self.chromedriver = chromedriver
+        self.INIT_URL = INIT_URL
+        self.credentials = list()
+        self.credentials_file = ".credentials"
         self.init()
 
     def init(self):
@@ -77,12 +87,39 @@ class Faculty(object):
         """
         self.driver = WebScrapper(
             self.chromedriver,
-            "https://web.whatsapp.com"
+            self.INIT_URL
         )
+
+        self.get_credentials()
+        self.login()
+
+    def get_credentials(self):
+        """
+        Opens a file, decrypts it, and gets credentials.
+        """
+        with open(self.credentials_file, "r") as file:
+            content = file.read()
+
+        self.credentials.extend(content.split("\n"))
+
+    def login(self):
+        """
+        Logs in WEB.
+        """
+        main_wrapper = self.driver.get_elements("#inst12780")
+        content = self.driver.get_elements(".content", main_wrapper)
+        inputs = self.driver.get_elements(".form-group input", content)
+        for input_index in range(len(inputs) - 1):
+            self.driver.send_keys(
+                    inputs[input_index],
+                    self.credentials[input_index]
+                    )
+
+        self.driver.send_keys(inputs[2], "enter")
 
 def run():
     chromedriver = os.path.expanduser("~/Apps/chromedriver")
-    faculty = Faculty(chromedriver)
+    faculty = Faculty(chromedriver, INIT_URL)
 
 def main():
     run()
