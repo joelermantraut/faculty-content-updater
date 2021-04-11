@@ -325,6 +325,22 @@ class WebScrapper(object):
 
         return properties
 
+    def get_inner_text(self, element):
+        """
+        Gets text between opening and closing of any tag.
+        """
+        return self.driver.execute_script("""
+        var parent = arguments[0];
+        var child = parent.firstChild;
+        var ret = "";
+        while(child) {
+            if (child.nodeType === Node.TEXT_NODE)
+                ret += child.textContent;
+            child = child.nextSibling;
+        }
+        return ret;
+        """, element)
+
     def scripting(self, code=None, filename=None):
         """
         Executes a JS script.

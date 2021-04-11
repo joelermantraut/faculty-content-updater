@@ -74,9 +74,10 @@ class Faculty(object):
     """
     Script to control faculty WEB.
     """
-    def __init__(self, chromedriver, INIT_URL):
+    def __init__(self, chromedriver, INIT_URL, career):
         self.chromedriver = chromedriver
         self.INIT_URL = INIT_URL
+        self.career = career
         self.credentials = list()
         self.credentials_file = ".credentials"
         self.init()
@@ -92,6 +93,26 @@ class Faculty(object):
 
         self.get_credentials()
         self.login()
+        self.walk_subjects()
+
+    def select_career(self):
+        """
+        Selects career from menu.
+        """
+        main_wrapper = self.driver.get_elements("#inst4991")
+        main_list = self.driver.get_elements(".content .no-overflow ul", main_wrapper)
+        items = self.driver.get_elements("li a", main_list)
+        for item in items:
+            text = self.driver.get_inner_text(item)
+            if text == self.career:
+                self.driver.click_elements(item)
+
+    def walk_subjects(self):
+        """
+        Take an array with subjects from download
+        content to drive, and does that.
+        """
+        self.select_career()
 
     def get_credentials(self):
         """
@@ -119,7 +140,7 @@ class Faculty(object):
 
 def run():
     chromedriver = os.path.expanduser("~/Apps/chromedriver")
-    faculty = Faculty(chromedriver, INIT_URL)
+    faculty = Faculty(chromedriver, INIT_URL, "Ingeniería Electrónica")
 
 def main():
     run()
