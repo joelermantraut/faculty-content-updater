@@ -1,6 +1,10 @@
 #!/usr/bin/python
 
 """
+Author: Joel Ermantraut
+File: main.py
+Desc: Main file of project.
+
 This script opens a faculty WEB, and downloads
 any new content on it. Depending on content, it
 saves it in different ways.
@@ -51,6 +55,7 @@ Inside each cathedra
 """
 
 from automation_scripts.web_scrapping import WebScrapper
+import os.path
 
 # Imports
 
@@ -58,8 +63,25 @@ INIT_URL = "https://aulavirtual.frbb.utn.edu.ar/"
 
 # Variables
 
+class Faculty(object):
+    """
+    Script to control faculty WEB.
+    """
+    def __init__(self, chromedriver):
+        self.chromedriver = chromedriver
+
+    def init(self):
+        """
+        Inits objects.
+        """
+        self.driver = WebScrapper(
+            self.chromedriver,
+            "https://web.whatsapp.com"
+        )
+
 def run():
-    pass
+    chromedriver = os.path.expanduser("~/Apps/chromedriver")
+    faculty = Faculty(chromedriver)
 
 def main():
     run()
