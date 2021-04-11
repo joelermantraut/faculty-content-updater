@@ -69,6 +69,7 @@ class Faculty(object):
     """
     def __init__(self, chromedriver):
         self.chromedriver = chromedriver
+        self.init()
 
     def init(self):
         """
