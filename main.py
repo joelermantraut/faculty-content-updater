@@ -74,10 +74,11 @@ class Faculty(object):
     """
     Script to control faculty WEB.
     """
-    def __init__(self, chromedriver, INIT_URL, career):
+    def __init__(self, chromedriver, INIT_URL, career, subjects):
         self.chromedriver = chromedriver
         self.INIT_URL = INIT_URL
         self.career = career
+        self.subjects = subjects
         self.credentials = list()
         self.credentials_file = ".credentials"
         self.init()
@@ -106,6 +107,19 @@ class Faculty(object):
             text = self.driver.get_inner_text(item)
             if text == self.career:
                 self.driver.click_elements(item)
+                break
+
+    def open_subject(self, subject):
+        """
+        Opens subject page.
+        """
+        main_wrapper = self.driver.get_elements(".course_category_tree")
+        courses_el = self.driver.get_elements(".courses .coursebox .info .coursename", main_wrapper)
+        for element in courses_el:
+            text = self.driver.driver.execute_script(
+                'return arguments[0].firstChild.textContent;', element
+                ).strip()
+            print(text)
 
     def walk_subjects(self):
         """
@@ -113,6 +127,12 @@ class Faculty(object):
         content to drive, and does that.
         """
         self.select_career()
+
+        for subject in self.subjects:
+            self.open_subject(subject)
+            # After this, driver will be standing
+            # in actual subject page, ready to
+            # download all content
 
     def get_credentials(self):
         """
@@ -140,7 +160,12 @@ class Faculty(object):
 
 def run():
     chromedriver = os.path.expanduser("~/Apps/chromedriver")
-    faculty = Faculty(chromedriver, INIT_URL, "Ingeniería Electrónica")
+    faculty = Faculty(
+            chromedriver,
+            INIT_URL,
+            "Ingeniería Electrónica",
+            ["Técnicas Digitales III (Friedrich)"]
+    )
 
 def main():
     run()
