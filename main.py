@@ -96,6 +96,24 @@ class Faculty(object):
         self.login()
         self.walk_subjects()
 
+    def solve(self, activity):
+        """
+        Receives an element and decides what
+        to do with it.
+        """
+        pass
+
+    def download_all(self):
+        """
+        Being in correct page, navigates through
+        all page downloading content.
+        """
+        sections = self.driver.get_elements(".topics .section .content .section")
+        for section in sections:
+            activities = self.driver.get_elements(".activity", section)
+            for activity in activities:
+                self.solve(activity)
+
     def select_career(self):
         """
         Selects career from menu.
@@ -118,8 +136,10 @@ class Faculty(object):
         for element in courses_el:
             text = self.driver.driver.execute_script(
                 'return arguments[0].firstChild.textContent;', element
-                ).strip()
-            print(text)
+            ).strip()
+            if text == subject:
+                self.driver.click_elements(element)
+                break
 
     def walk_subjects(self):
         """
@@ -133,6 +153,7 @@ class Faculty(object):
             # After this, driver will be standing
             # in actual subject page, ready to
             # download all content
+            self.download_all()
 
     def get_credentials(self):
         """
@@ -166,6 +187,8 @@ def run():
             "Ingeniería Electrónica",
             ["Técnicas Digitales III (Friedrich)"]
     )
+
+    time.sleep(2)
 
 def main():
     run()

@@ -101,6 +101,12 @@ class WebScrapper(object):
         """
         self.driver.refresh()
 
+    def back(self):
+        """
+        Goes back one page.
+        """
+        self.driver.back()
+
     def get_elements(self, selector, roots=None):
         """
         Gets object and return it.
