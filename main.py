@@ -96,12 +96,35 @@ class Faculty(object):
         self.login()
         self.walk_subjects()
 
+    def download_pdf(self, element):
+        """
+        Gets an element which has a PDF and
+        downloads it.
+        """
+        a = self.driver.get_elements("a", element)
+        link = self.driver.get_properties("href", a)
+        """
+        TERMINAR ACA
+
+        ABRIR UNA PESTAÑA CON ESE ENLACE. ENCONTRAR EL LINK
+        AL PDF Y USAR EL SIGUIENTE FRAGMENTO U OTRO PARA
+        DESCARGARLO.
+        """
+        import requests
+        url='https://pdfs.semanticscholar.org/c029/baf196f33050ceea9ecbf90f054fd5654277.pdf'
+        r = requests.get(url, stream=True)
+
+        with open('C:/Users/MICRO HARD/myfile.pdf', 'wb') as f:
+        f.write(r.content)
+
     def solve(self, activity):
         """
         Receives an element and decides what
         to do with it.
         """
-        pass
+        classes = self.driver.get_properties("class", activity)
+        if "resource" in classes[0]:
+            self.download_pdf(activity)
 
     def download_all(self):
         """
