@@ -5,3 +5,6 @@ It goes from each subject page like a directory, creating folders on new section
 each format.
 
 Special cases (like links, inline info, etc.) are defined in a way to save it.
+
+## Actual progress
+Stacked in download embedded PDF files.
