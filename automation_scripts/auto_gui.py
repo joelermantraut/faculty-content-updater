@@ -7,7 +7,7 @@ Class to simplify the use of PyAutoGUI to multiple applications.
 
 import pyautogui
 from time import sleep
-from files_use import FileUse
+from automation_scripts.files_use import FileUse
 from threading import Thread
 
 class AutoGUI(object):

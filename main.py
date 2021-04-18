@@ -81,6 +81,11 @@ class Faculty(object):
         self.subjects = subjects
         self.credentials = list()
         self.credentials_file = ".credentials"
+        self.download_folder = "/home/joel/Downloads/"
+        self.profile = {"plugins.plugins_list": [{"enabled": False,
+                                                "name": "Chrome PDF Viewer"}],
+                       "download.default_directory": self.download_folder,
+                       "download.extensions_to_open": ""}
         self.init()
 
     def init(self):
@@ -89,7 +94,8 @@ class Faculty(object):
         """
         self.driver = WebScrapper(
             self.chromedriver,
-            self.INIT_URL
+            self.INIT_URL,
+            self.profile
         )
 
         self.get_credentials()
@@ -103,19 +109,12 @@ class Faculty(object):
         """
         a = self.driver.get_elements("a", element)
         link = self.driver.get_properties("href", a)
-        """
-        TERMINAR ACA
+        # self.driver.get(link[0])
+        self.driver.get("https://aulavirtual.frbb.utn.edu.ar/pluginfile.php/245253/mod_resource/content/2/Tanenbaum%20-%20Redes%20-%20Cap%201.pdf")
+        # Open embedded PDF url
+        print("OK")
 
-        ABRIR UNA PESTAÑA CON ESE ENLACE. ENCONTRAR EL LINK
-        AL PDF Y USAR EL SIGUIENTE FRAGMENTO U OTRO PARA
-        DESCARGARLO.
-        """
-        import requests
-        url='https://pdfs.semanticscholar.org/c029/baf196f33050ceea9ecbf90f054fd5654277.pdf'
-        r = requests.get(url, stream=True)
-
-        with open('C:/Users/MICRO HARD/myfile.pdf', 'wb') as f:
-        f.write(r.content)
+        exit(1)
 
     def solve(self, activity):
         """

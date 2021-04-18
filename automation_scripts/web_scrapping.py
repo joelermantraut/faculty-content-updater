@@ -19,11 +19,12 @@ from time import sleep
 
 class WebScrapper(object):
     """Class to simplify WEB scrapping"""
-    def __init__(self, PATH, url):
+    def __init__(self, PATH, url, profile):
         super(WebScrapper, self).__init__()
         self.PATH = PATH
         # Direccion donde esta guardado ChromeDriver
         self.url = url
+        self.profile = profile
         self.find_methods = [
             By.ID,
             By.XPATH,
@@ -74,8 +75,16 @@ class WebScrapper(object):
         """
         Inits WebDriver.
         """
-        self.driver = webdriver.Chrome(self.PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("prefs", self.profile)
+        self.driver = webdriver.Chrome(self.PATH, chrome_options = options)
         self.driver.get(self.url)
+
+    def get(self, url):
+        """
+        Get method.
+        """
+        self.driver.get(url)
 
     def quit(self):
         """
