@@ -1,6 +1,6 @@
 # faculty-content-updater
 
-This script opens a faculty WEB, and downloads any new content on it. Depending on content, it saves content in different ways.
+This script opens a faculty WEB, and downloads any new content on it. Depending on content, saves it in different ways.
 It goes from each subject page like a directory, creating folders on new sections, and downloading or saving data in
 each format.
 
