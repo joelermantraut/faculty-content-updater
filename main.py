@@ -58,9 +58,24 @@ Inside each cathedra
              - To deliver: .assign
              - Zoom: .zoom
 
+Another way to select subjects - Going through Personal Area
+    - .toggle-display textmenu
+        - .icon menu-action
+            - .span6
+                - .well well-small
+                    - .course-info-container
+                        - .media
+                            - .media-body
+                                - .media-heading
+                                    - a
+            - #pb-for-in-progress
+                - ul
+                    - li.page-item
+
 """
 
 from automation_scripts.web_scrapping import WebScrapper
+from automation_scripts.auto_gui import AutoGUI
 import os.path
 import time
 
@@ -85,7 +100,9 @@ class Faculty(object):
         self.profile = {"plugins.plugins_list": [{"enabled": False,
                                                 "name": "Chrome PDF Viewer"}],
                        "download.default_directory": self.download_folder,
+                       "download.prompt_for_download": False,
                        "download.extensions_to_open": ""}
+        self.pdf_download_button_filename = "images/pdf_download_button.png"
         self.init()
 
     def init(self):
@@ -98,9 +115,12 @@ class Faculty(object):
             self.profile
         )
 
+        self.autogui = AutoGUI()
+
         self.get_credentials()
         self.login()
-        self.walk_subjects()
+        self.goto_personal_area()
+        self.walk_personal_subjects()
 
     def download_pdf(self, element):
         """
@@ -108,13 +128,20 @@ class Faculty(object):
         downloads it.
         """
         a = self.driver.get_elements("a", element)
-        link = self.driver.get_properties("href", a)
-        # self.driver.get(link[0])
-        self.driver.get("https://aulavirtual.frbb.utn.edu.ar/pluginfile.php/245253/mod_resource/content/2/Tanenbaum%20-%20Redes%20-%20Cap%201.pdf")
-        # Open embedded PDF url
-        print("OK")
+        self.driver.click_elements(a)
+        # This opens the PDF
+        time.sleep(2)
+        # Waits to it to charge
+        coords = self.autogui.get_on_screen(self.pdf_download_button_filename)
+        self.autogui.mouse_move([coords.x, coords.y])
+        self.autogui.click()
+        # Clicks on download PDF button
+        # self.driver.driver.wait.until(self.driver.driver.expected_conditions.alert_is_present())
+        time.sleep(2)
+        alert = self.driver.driver.switch_to.alert
 
-        exit(1)
+        alert.accept()
+        # TODO: Manage save prompt
 
     def solve(self, activity):
         """
@@ -168,13 +195,41 @@ class Faculty(object):
         Take an array with subjects from download
         content to drive, and does that.
         """
-        self.select_career()
-
         for subject in self.subjects:
             self.open_subject(subject)
             # After this, driver will be standing
             # in actual subject page, ready to
             # download all content
+            self.download_all()
+            # TODO: Correct this
+
+    def goto_personal_area(self):
+        """
+        Goes to personal area tab.
+        """
+        user_button = self.driver.get_elements(".toggle-display.textmenu")
+        self.driver.click_elements(user_button)
+        personal_area_button = self.driver.get_elements(".icon.menu-action")
+        self.driver.click_elements(personal_area_button)
+
+    def walk_personal_subjects(self):
+        """
+        Like walk_subjects, but with personal area page.
+        """
+        links_list = list()
+
+        subjects = self.driver.get_elements(".course-info-container")
+        for subject in subjects:
+            subjects_box = self.driver.get_elements("a", subject)
+            for subject_box in subjects_box:
+                subject_name = self.driver.get_inner_text(subject_box)
+                for my_subject in self.subjects:
+                    if subject_name == my_subject:
+                        links_list.append(*self.driver.get_properties("href", subject_box))
+
+        for link in links_list:
+            self.driver.get(link)
+            # Opens the page
             self.download_all()
 
     def get_credentials(self):
@@ -207,7 +262,7 @@ def run():
             chromedriver,
             INIT_URL,
             "Ingeniería Electrónica",
-            ["Técnicas Digitales III (Friedrich)"]
+            ["Técnicas Digitales III (Friedrich - Ing. Electrónica - 2021)"]
     )
 
     time.sleep(2)

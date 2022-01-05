@@ -77,7 +77,7 @@ class WebScrapper(object):
         """
         options = webdriver.ChromeOptions()
         options.add_experimental_option("prefs", self.profile)
-        self.driver = webdriver.Chrome(self.PATH, chrome_options = options)
+        self.driver = webdriver.Chrome(self.PATH, options = options)
         self.driver.get(self.url)
 
     def get(self, url):

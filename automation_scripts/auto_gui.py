@@ -76,7 +76,7 @@ class AutoGUI(object):
             else:
                 pyautogui.moveTo(move[0], move[1])
 
-    def click(self, mode, clicks=1):
+    def click(self, mode=0, clicks=1):
         """
         Clicks in the position where the mouse is.
         If mode:
