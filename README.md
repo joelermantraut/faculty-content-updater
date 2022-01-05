@@ -7,4 +7,4 @@ each format.
 Special cases (like links, inline info, etc.) are defined in a way to save it.
 
 ## Actual progress
-Stacked in download embedded PDF files.
+Stacked in download embedded PDF files. Looking for way to dismiss save prompt.
